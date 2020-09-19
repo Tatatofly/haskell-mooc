@@ -75,7 +75,14 @@ myGcd = todo
 -- * you can compute the length of a string with the length function
 
 leftpad :: String -> Int -> String
-leftpad = todo
+leftpad s i = if i > (length s)
+  then addSpace s (i - (length s))
+  else s
+
+addSpace :: String -> Int -> String
+addSpace s i = if i > 0
+  then addSpace (" " ++ s) (i-1)
+  else s
 
 ------------------------------------------------------------------------------
 -- Ex 5: let's make a countdown for a rocket! Given a number, you
@@ -109,7 +116,14 @@ countdown = todo
 -- Hint: remember the mod function!
 
 smallestDivisor :: Integer -> Integer
-smallestDivisor = todo
+smallestDivisor n = if (n `mod` 2) == 0
+  then 2
+  else divisorLooper n 3
+
+divisorLooper :: Integer -> Integer -> Integer
+divisorLooper n i = if (n `mod` i) == 0
+  then i
+  else divisorLooper n (i+1)
 
 ------------------------------------------------------------------------------
 -- Ex 7: implement a function isPrime that checks if the given number
@@ -118,7 +132,11 @@ smallestDivisor = todo
 -- Ps. 0 and 1 are not prime numbers
 
 isPrime :: Integer -> Bool
-isPrime = todo
+isPrime i = if i == 0 || i == 1
+  then False
+  else if (smallestDivisor i) == i
+    then True
+    else False
 
 ------------------------------------------------------------------------------
 -- Ex 8: implement a function biggestPrimeAtMost that returns the
@@ -133,4 +151,6 @@ isPrime = todo
 --   biggestPrimeAtMost 10 ==> 7
 
 biggestPrimeAtMost :: Integer -> Integer
-biggestPrimeAtMost = todo
+biggestPrimeAtMost i = if (isPrime i)
+  then i
+  else biggestPrimeAtMost (i-1)
