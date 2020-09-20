@@ -39,7 +39,9 @@ import Mooc.Todo
 --   buildList 7 0 3 ==> [3]
 
 buildList :: Int -> Int -> Int -> [Int]
-buildList start count end = todo
+buildList start count end = if count == 0
+  then [end]
+  else start: (buildList start (count -1) end)
 
 ------------------------------------------------------------------------------
 -- Ex 2: given i, build the list of sums [1, 1+2, 1+2+3, .., 1+2+..+i]
@@ -49,7 +51,19 @@ buildList start count end = todo
 -- Ps. you'll probably need a recursive helper function
 
 sums :: Int -> [Int]
-sums i = todo
+sums i = if i == 0
+  then []
+  else sumsHelper i 1
+
+sumsHelper :: Int -> Int -> [Int]
+sumsHelper i round = if i == round
+  then sumsRec round : []
+  else sumsRec round : sumsHelper i (round + 1)
+
+sumsRec :: Int -> Int
+sumsRec round = if round == 0
+  then 0
+  else round + sumsRec (round - 1)
 
 ------------------------------------------------------------------------------
 -- Ex 3: define a function mylast that returns the last value of the
@@ -63,7 +77,9 @@ sums i = todo
 --   mylast 0 [1,2,3] ==> 3
 
 mylast :: a -> [a] -> a
-mylast def xs = todo
+mylast def [] = def
+mylast def (x:[]) = x
+mylast def (x:xs) = mylast def xs
 
 ------------------------------------------------------------------------------
 -- Ex 4: safe list indexing. Define a function indexDefault so that
@@ -93,7 +109,12 @@ indexDefault xs i def = todo
 -- Use pattern matching and recursion to iterate through the list.
 
 sorted :: [Int] -> Bool
-sorted xs = todo
+sorted [] = True
+sorted (x:[]) = True
+sorted (x:y:xs) = if x <= y
+  then sorted (y:xs)
+  else False
+
 
 ------------------------------------------------------------------------------
 -- Ex 6: compute the partial sums of the given list like this:
@@ -151,7 +172,9 @@ mymaximum bigger initial xs = todo
 -- Use recursion and pattern matching. Do not use any library functions.
 
 map2 :: (a -> b -> c) -> [a] -> [b] -> [c]
-map2 f as bs = todo
+map2 f [] bs = []
+map2 f as [] = []
+map2 f (x:as) (y:bs) = (f x y) : (map2 f as bs)
 
 ------------------------------------------------------------------------------
 -- Ex 10: implement the function maybeMap, which works a bit like a
