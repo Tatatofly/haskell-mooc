@@ -35,7 +35,12 @@ import Data.Array
 -- you remove the Eq a => constraint from the type!
 
 allEqual :: Eq a => [a] -> Bool
-allEqual xs = todo
+allEqual [] = True
+allEqual [x] = True
+allEqual (x:y:xs) = if x == y
+  then allEqual (y:xs)
+  else False
+
 
 ------------------------------------------------------------------------------
 -- Ex 2: implement the function distinct which returns True if all
@@ -50,7 +55,9 @@ allEqual xs = todo
 --   distinct [1,2] ==> True
 
 distinct :: Eq a => [a] -> Bool
-distinct = todo
+distinct xs = if(length xs) == (length (nub xs))
+  then True
+  else False
 
 ------------------------------------------------------------------------------
 -- Ex 3: implement the function middle that returns the middle value
@@ -63,7 +70,8 @@ distinct = todo
 --   middle 'b' 'a' 'c'  ==> 'b'
 --   middle 1 7 3        ==> 3
 
-middle = todo
+middle :: Ord a => a -> a -> a -> a
+middle x y z = head (drop 1 ((sort [x, y, z])))
 
 ------------------------------------------------------------------------------
 -- Ex 4: return the range of an input list, that is, the difference
@@ -78,8 +86,8 @@ middle = todo
 --   rangeOf [4,2,1,3]          ==> 3
 --   rangeOf [1.5,1.0,1.1,1.2]  ==> 0.5
 
-rangeOf :: [a] -> a
-rangeOf = todo
+rangeOf :: (Num a, Ord a) => [a] -> a
+rangeOf xs = (maximum xs) - (minimum xs)
 
 ------------------------------------------------------------------------------
 -- Ex 5: given a list of lists, return the longest list. If there
@@ -127,7 +135,7 @@ incrementKey = todo
 -- length to a Fractional
 
 average :: Fractional a => [a] -> a
-average xs = todo
+average xs = (foldr (+) 0 xs) / (fromIntegral (length xs))
 
 ------------------------------------------------------------------------------
 -- Ex 8: given a map from player name to score and two players, return
@@ -145,7 +153,11 @@ average xs = todo
 --     ==> "Bob"
 
 winner :: Map.Map String Int -> String -> String -> String
-winner scores player1 player2 = todo
+winner scores player1 player2 = if (Map.lookup player1 scores) > (Map.lookup player2 scores)
+  then player1
+  else if (Map.lookup player1 scores) < (Map.lookup player2 scores)
+    then player2
+    else player1
 
 ------------------------------------------------------------------------------
 -- Ex 9: compute how many times each value in the list occurs. Return
