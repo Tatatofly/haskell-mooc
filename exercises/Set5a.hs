@@ -12,14 +12,14 @@ import Mooc.Todo
 -- Bus, Tram and Train.
 --
 -- The constructors don't need any fields.
-
+data Vehicle = Bike| Bus| Tram | Train
 
 ------------------------------------------------------------------------------
 -- Ex 2: Define the type BusTicket that can represent values like these:
 --  - SingleTicket
 --  - MonthlyTicket "January"
 --  - MonthlyTicket "December"
-
+data BusTicket = SingleTicket | MonthlyTicket String
 
 ------------------------------------------------------------------------------
 -- Ex 3: Here's the definition for a datatype ShoppingEntry that
