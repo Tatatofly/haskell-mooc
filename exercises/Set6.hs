@@ -13,7 +13,11 @@ data Country = Finland | Switzerland | Norway
   deriving Show
 
 instance Eq Country where
-  (==) = todo
+  (==) Finland Finland = True
+  (==) Switzerland Switzerland = True
+  (==) Norway Norway = True
+  (==) _ _ = False
+
 
 ------------------------------------------------------------------------------
 -- Ex 2: implement an Ord instance for Country so that
@@ -41,7 +45,7 @@ data Name = Name String
   deriving Show
 
 instance Eq Name where
-  (==) = todo
+  (==) (Name x) (Name y) = (map toLower x) == (map toLower y)
 
 ------------------------------------------------------------------------------
 -- Ex 4: here is a list type parameterized over the type it contains.
@@ -72,12 +76,29 @@ data Egg = ChickenEgg | ChocolateEgg
 data Milk = Milk Int -- amount in litres
   deriving Show
 
+class Price x where 
+  price :: x -> Int
+
+instance Price Egg where
+  price ChickenEgg = 20
+  price ChocolateEgg = 30
+
+instance Price Milk where
+  price (Milk amount) = (amount * 15)
+
 
 ------------------------------------------------------------------------------
 -- Ex 6: define the necessary instances in order to be able to compute these:
 --
 -- price [Just (ChocolateEgg), Nothing, Just (ChickenEgg)] ==> 50
 -- price [Nothing, Nothing, Just (Milk 1), Just (Milk 2)]  ==> 45
+instance Price x => Price (Maybe x) where
+  price Nothing = 0
+  price (Just x) = price x
+
+instance Price x => Price [x] where
+  price [] = 0
+  price (x:xs) = (price x) + (price xs)
 
 
 ------------------------------------------------------------------------------
@@ -115,7 +136,7 @@ data RationalNumber = RationalNumber Integer Integer
   deriving Show
 
 instance Eq RationalNumber where
-  p == q = todo
+  (RationalNumber x y) == (RationalNumber xx yy) = ((x * yy) == (y * xx))
 
 ------------------------------------------------------------------------------
 -- Ex 9: implement the function simplify, which simplifies rational a
@@ -175,6 +196,17 @@ instance Num RationalNumber where
 --   add 1 zero             ==>  1
 --   add [1,2] [3,4]        ==>  [1,2,3,4]
 --   add zero [True,False]  ==>  [True,False]
+class Addable x where
+  zero :: x
+  add :: x -> x -> x
+
+instance Addable [x] where
+  zero = []
+  add x y = x ++ y
+
+instance Addable Integer where
+  zero = 0
+  add x y = x + y
 
 
 ------------------------------------------------------------------------------
