@@ -48,7 +48,7 @@ twoBananas = MkShoppingEntry "Banana" 1.1 2
 --   totalPrice twoBananas   ==> 2.2
 
 totalPrice :: ShoppingEntry -> Double
-totalPrice = todo
+totalPrice (MkShoppingEntry product price amount) = (fromIntegral amount) * price
 
 -- buyOneMore should increment the count in an entry by one
 --
@@ -56,7 +56,7 @@ totalPrice = todo
 --   buyOneMore twoBananas    ==> MkShoppingEntry "Banana" 1.1 3
 
 buyOneMore :: ShoppingEntry -> ShoppingEntry
-buyOneMore = todo
+buyOneMore (MkShoppingEntry product price amount) = MkShoppingEntry product price (amount + 1)
 
 ------------------------------------------------------------------------------
 -- Ex 4: define a datatype Person, which should contain the age (an
@@ -65,28 +65,28 @@ buyOneMore = todo
 -- Also define a Person value fred, and the functions getAge, getName,
 -- setAge and setName (see below).
 
-data Person = PersonUndefined
+data Person = MkPerson String Int
   deriving Show
 
 -- fred is a person whose name is Fred and age is 90
 fred :: Person
-fred = todo
+fred = MkPerson "Fred" 90
 
 -- getName returns the name of the person
 getName :: Person -> String
-getName p = todo
+getName (MkPerson name age) = name
 
 -- getAge returns the age of the person
 getAge :: Person -> Int
-getAge p = todo
+getAge (MkPerson name age) = age
 
 -- setName takes a person and returns a new person with the name changed
 setName :: String -> Person -> Person
-setName name p = todo
+setName newName (MkPerson name age) = MkPerson newName age
 
 -- setAge does likewise for age
 setAge :: Int -> Person -> Person
-setAge age p = todo
+setAge newAge (MkPerson name age) = MkPerson name newAge
 
 ------------------------------------------------------------------------------
 -- Ex 5: define a datatype Position which contains two Int values, x
@@ -96,27 +96,27 @@ setAge age p = todo
 --   getY (up (up origin))    ==> 2
 --   getX (up (right origin)) ==> 1
 
-data Position = PositionUndefined
+data Position = MkPosition Int Int
 
 -- origin is a Position value with x and y set to 0
 origin :: Position
-origin = todo
+origin = MkPosition 0 0
 
 -- getX returns the x of a Position
 getX :: Position -> Int
-getX = todo
+getX (MkPosition x y) = x
 
 -- getY returns the y of a position
 getY :: Position -> Int
-getY = todo
+getY (MkPosition x y) = y
 
 -- up increases the y value of a position by one
 up :: Position -> Position
-up = todo
+up (MkPosition x y) = MkPosition x (y + 1)
 
 -- right increases the x value of a position by one
 right :: Position -> Position
-right = todo
+right (MkPosition x y) = MkPosition (x + 1) y
 
 ------------------------------------------------------------------------------
 -- Ex 6: Here's a datatype that represents a student. A student can
@@ -131,7 +131,10 @@ data Student = Freshman | NthYear Int | Graduated
 -- graduated student stays graduated even if he studies.
 
 study :: Student -> Student
-study = todo
+study Graduated = Graduated
+study Freshman = NthYear 1
+study (NthYear 7) = Graduated
+study (NthYear x) = NthYear (x + 1)
 
 ------------------------------------------------------------------------------
 -- Ex 7: define a datatype UpDown that represents a counter that can
