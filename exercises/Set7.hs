@@ -49,7 +49,7 @@ data Set a = Set [a]
 
 -- emptySet is a set with no elements
 emptySet :: Set a
-emptySet = Set []
+emptySet = todo
 
 -- member tests if an element is in a set
 member :: Eq a => a -> Set a -> Bool
@@ -92,10 +92,19 @@ add = todo
 data Event = AddEggs | AddFlour | AddSugar | Mix | Bake
   deriving (Eq,Show)
 
-data State = Start | Error | Finished
+data State = Start | Error | Finished | Eggs | Sugar | Flour | PreMix | Mixing 
   deriving (Eq,Show)
 
-step = todo
+step :: State -> Event -> State
+step Start AddEggs = Eggs
+step Eggs AddFlour = Flour
+step Eggs AddSugar = Sugar
+step Sugar AddFlour = PreMix
+step Flour AddSugar = PreMix
+step PreMix Mix = Mixing
+step Mixing Bake = Finished
+step Finished _ = Finished
+step _ _ = Error
 
 -- do not edit this
 bake :: [Event] -> State
@@ -113,13 +122,13 @@ bake events = go Start events
 --   average (1.0 :| [2.0,3.0])  ==>  2.0
 
 average :: Fractional a => NonEmpty a -> a
-average = todo
+average x = (foldr (+) 0 x) / fromIntegral (length x)
 
 ------------------------------------------------------------------------------
 -- Ex 5: reverse a NonEmpty list.
 
 reverseNonEmpty :: NonEmpty a -> NonEmpty a
-reverseNonEmpty = todo
+reverseNonEmpty (x:|xs) = let y = reverse (x:xs) in head y :| tail y
 
 ------------------------------------------------------------------------------
 -- Ex 6: implement Semigroup instances for the Distance, Time and
@@ -213,7 +222,11 @@ data PasswordRequirement =
   deriving Show
 
 passwordAllowed :: String -> PasswordRequirement -> Bool
-passwordAllowed = todo
+passwordAllowed password (MinimumLength minLenght) = if (length password) < minLenght then False else True
+passwordAllowed password (ContainsSome containList) = elem True (map (\x -> elem x password) containList)
+passwordAllowed password (DoesNotContain containList) = (not (passwordAllowed password (ContainsSome containList)))
+passwordAllowed password (And x y) = if (passwordAllowed password x) && (passwordAllowed password y) then True else False
+passwordAllowed password (Or x y) = if (passwordAllowed password x) || (passwordAllowed password y) then True else False
 
 ------------------------------------------------------------------------------
 -- Ex 10: a DSL for simple arithmetic expressions with addition and
