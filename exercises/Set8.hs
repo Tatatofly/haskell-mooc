@@ -168,7 +168,8 @@ blendColor :: Color -> Color -> Color
 blendColor (Color rx gx bx) (Color ry gy by) = Color (avarage rx ry) (avarage gx gy) (avarage bx by)
 
 combine :: (Color -> Color -> Color) -> Picture -> Picture -> Picture
-combine = todo 
+combine bb (Picture xx) (Picture yy) = let b (Coord x y) = bb (xx (Coord x y)) (yy (Coord x y)) 
+  in Picture b
 
 ------------------------------------------------------------------------------
 
@@ -230,7 +231,8 @@ exampleCircle = fill red (circle 80 100 200)
 
 
 rectangle :: Int -> Int -> Int -> Int -> Shape
-rectangle x0 y0 w h = todo
+rectangle x0 y0 w h = let helper (Coord x y) = ((x < x0 + w) && (y < y0 + h) && (x >= x0) && (y >= y0)) in Shape helper
+
 ------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
@@ -246,10 +248,10 @@ rectangle x0 y0 w h = todo
 -- shape.
 
 union :: Shape -> Shape -> Shape
-union = todo
+union (Shape xx) (Shape yy) = let helper (Coord x y) = ((xx (Coord x y)) || (yy (Coord x y))) in Shape helper
 
 cut :: Shape -> Shape -> Shape
-cut = todo
+cut (Shape xx) (Shape yy) = let helper (Coord x y) = ((xx (Coord x y)) && (not (yy (Coord x y)))) in Shape helper
 ------------------------------------------------------------------------------
 
 -- Here's a snowman, built using union from circles and rectangles.
@@ -276,7 +278,7 @@ exampleSnowman = fill white snowman
 --   ["000000","000000","000000"]]
 
 paintSolid :: Color -> Shape -> Picture -> Picture
-paintSolid color shape base = todo
+paintSolid color shape (Picture base) = let helper (Coord x y) = if contains shape x y then color else base (Coord x y) in Picture helper
 ------------------------------------------------------------------------------
 
 allWhite :: Picture
